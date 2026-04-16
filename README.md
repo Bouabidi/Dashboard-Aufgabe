@@ -1,4 +1,4 @@
-#– Angular Login & Dashboard
+## Angular Login & Dashboard
 
 Im Rahmen dieses Projekts wurde eine funktionale Angular-Basisanwendung entwickelt. Das Ziel der Umsetzung bestand darin, eine saubere, moderne Architektur mit Authentifizierung sowie einen internen Bereich bereitzustellen. 
 ##  Lokale Umgebung
