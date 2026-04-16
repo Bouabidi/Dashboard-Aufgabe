@@ -1,59 +1,57 @@
-# DashboardAufgabe
+#– Angular Login & Dashboard
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.3.
+Im Rahmen dieses Projekts wurde eine funktionale Angular-Basisanwendung entwickelt. Das Ziel der Umsetzung bestand darin, eine saubere, moderne Architektur mit Authentifizierung sowie einen internen Bereich bereitzustellen. 
+##  Lokale Umgebung
 
-## Development server
-
-To start a local development server, run:
-
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Die Anwendung kann über die Angular CLI gestartet werden:
 
 ```bash
-ng generate component component-name
+# 1. Abhängigkeiten installieren
+npm install
+
+# 2. Entwicklungsserver starten
+npm start
 ```
+Nach dem Start ist die App unter **http://localhost:4200** erreichbar.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+###  Test-Accounts (Demo)
+Da noch keine echte Backend-Anbindung existiert, wurden zwei Accounts hardcodiert. Für den Test des Logins können folgende Daten verwendet werden:
 
-```bash
-ng generate --help
-```
+| Benutzername | Passwort   | Sichtbare Bereiche |
+|---|---|---|
+| `admin`      | `admin123` | Vollständiger Zugriff (inkl. Admin-Bereich) |
+| `user`       | `user123`  | Dashboard, Profil & Einstellungen |
 
-## Building
+---
 
-To build the project run:
+##  Projektstruktur
 
-```bash
-ng build
-```
+Die Architektur wurde logisch getrennt, um eine schnelle Einarbeitung zu ermöglichen:
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+* `src/app/core/` -> Beinhaltet die globale Logik und Typen.
+  * `services/` -> Hier werden Services wie `auth.service.ts` (Login-Logik) und `theme.service.ts` (Dark Mode Steuerung) verwaltet.
+  * `guards/` -> Die Routenabsicherung wurde über funktionale Guards (`authGuard` und `adminGuard`) umgesetzt.
+* `src/app/features/` -> Hier sind die jeweiligen Hauptseiten gekapselt.
+  * `login/` -> Beinhaltet die Login-Komponente.
+  * `main/` -> Umfasst das Layout (Sidenav + Topbar) und die Sub-Routen (Dashboard, Profil, Einstellungen, Admin).
 
-## Running unit tests
+##  Integrierte Features
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Folgende Kernfunktionen und Zusatz-Features wurden implementiert:
 
-```bash
-ng test
-```
+- **Sicheres Routing:** Die `/main`-Routen können nur im eingeloggten Zustand aufgerufen werden. 
+- **Formular-Validierung:** Für Login und Profil wurde `ReactiveFormsModule` verwendet. Pflichtfelder und Mindestlängen (z.B. Passwort) werden geprüft.
+- **Rollenkonzept:** Bestimmte Einträge, wie der "Admin-Bereich", werden nur gerendert, wenn die Rolle des Benutzers ausreicht.
+- **Echter Dark Mode:** Ein Theme-Switching wurde über Angular Material und CSS Custom Properties eingebaut. 
+- **Persistenz:** Durch die Nutzung von lokaler Speicherung (`localStorage`) gehen der Login-Status und die Theme-Auswahl bei einem Seiten-Reload nicht verloren.
+- **Responsives Design:** Auf mobilen Endgeräten wird die Sidenav automatisch als Overlay (`over`-Mode) dargestellt und schließt sich bei Interaktion.
+- **Unit-Tests:** Für die Guards und Services wurden Unit-Tests geschrieben. Als Test-Runner wurde **Vitest** etabliert (`npm test`).
 
-## Running end-to-end tests
+##  Verwendete Angular-Technologien
 
-For end-to-end (e2e) testing, run:
+Um modernen Best-Practices zu folgen, wurden folgende Konzepte angewendet:
 
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **Standalone Components:** Das gesamte Projekt wurde komponenten-basiert und ohne traditionelle `NgModules` aufgebaut.
+- **Signals:** Für das State-Management (z.B. aktueller Benutzer, Dark-Mode-Status) wurden Angular Signals verwendet, wodurch auf kompexe RxJS-Konstrukte verzichtet werden konnte.
+- **Dependency Injection:** Abhängigkeiten wurden konsequent über die `inject()`-Funktion injiziert, um die Konstruktoren übersichtlich zu halten.
+- **Lazy Loading:** Die einzelnen Feature-Bereiche im internen Bereich werden asynchron nachgeladen (Lazy Loading über `app.routes.ts`).
